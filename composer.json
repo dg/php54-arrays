@@ -1,7 +1,7 @@
 {
 	"type": "project",
 	"name": "dg/php54-arrays",
-	"description": "Command-line script to convert array() to PHP 5.4's short syntax []",
+	"description": "Command-line script to convert between array() and PHP 5.4's short syntax []",
 	"license": ["BSD-3-Clause"],
 	"authors": [
 		{
