@@ -25,7 +25,7 @@ if (!is_dir($dir)) {
 }
 
 foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir)) as $file) {
-	if (!$file->isFile() || $file->getExtension() !== 'php') {
+	if (!$file->isFile() || !in_array($file->getExtension(), array('php', 'phpt'), TRUE)) {
 		continue;
 	}
 	echo $file;
