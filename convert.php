@@ -12,7 +12,7 @@ Convertor for PHP 5.4 arrays
 ';
 
 $args = $_SERVER['argv'];
-$toOldSyntax = (isset($args[1]) && in_array($args[1], array('-r', '--reverse')));
+$toOldSyntax = (isset($args[1]) && in_array($args[1], ['-r', '--reverse']));
 
 if (!isset($args[1]) || ($toOldSyntax && !isset($args[2]))) {
 	die("Usage: {$args[0]} [-r|--reverse] <directory>\n");
@@ -25,7 +25,7 @@ if (!is_dir($dir)) {
 }
 
 foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir)) as $file) {
-	if (!$file->isFile() || !in_array($file->getExtension(), array('php', 'phpt'), TRUE)) {
+	if (!$file->isFile() || !in_array($file->getExtension(), ['php', 'phpt'], TRUE)) {
 		continue;
 	}
 	echo $file;
@@ -51,7 +51,7 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir)) as 
 function convertArraysToSquareBrackets($code)
 {
 	$out = '';
-	$brackets = array();
+	$brackets = [];
 	$tokens = token_get_all($code);
 
 	for ($i = 0; $i < count($tokens); $i++) {
@@ -87,7 +87,7 @@ function convertArraysToSquareBrackets($code)
 function convertSquareBracketsToArrays($code)
 {
 	$out = '';
-	$brackets = array();
+	$brackets = [];
 	$ignoreBracket = FALSE;
 	foreach (token_get_all($code) as $token) {
 		if ($token === '[') {
@@ -97,8 +97,8 @@ function convertSquareBracketsToArrays($code)
 			$token = array_pop($brackets) ? ')' : ']';
 		}
 		if (!is_array($token) || $token[0] !== T_WHITESPACE) {
-			$ignoreBracket = (in_array($token, array(')', ']', '}'))
-				|| (is_array($token) && in_array($token[0], array(T_VARIABLE, T_STRING, T_STRING_VARNAME))));
+			$ignoreBracket = (in_array($token, [')', ']', '}'])
+				|| (is_array($token) && in_array($token[0], [T_VARIABLE, T_STRING, T_STRING_VARNAME])));
 		}
 		$out .= is_array($token) ? $token[1] : $token;
 	}
