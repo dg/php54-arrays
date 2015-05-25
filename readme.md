@@ -1,10 +1,28 @@
 PHP 5.4 Short Arrays Converter []
 =================================
 
-Command-line script to convert between `array()` and PHP 5.4's short syntax `[]`.
+Command-line script to convert between `array()` and PHP 5.4's short syntax `[]` (and vice versa).
 
-Usage:
+It uses native PHP tokenizer, so conversion is safe.
+The script was successfully tested against thousands of PHP files.
 
-	php convert.php <directory>               # converts to [] syntax in a whole directory recursively
-	php convert.php --reverse <directory>     # converts to array() syntax
-	php convert.php < input.php > output.php  # converts single file from STDIN
+Usage
+-----
+
+To convert all `*.php` and `*.phpt` files in whole directory recursively or to convert a single file use:
+
+```
+php convert.php <directory | file>
+```
+
+To convert source code from STDIN and print the output to STDOUT use:
+
+```
+php convert.php < input.php > output.php
+```
+
+To convert short syntax `[]` to older long syntax `array()` use option `--reverse`:
+
+```
+php convert.php --reverse <directory | file>
+```
