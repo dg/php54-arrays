@@ -6,40 +6,46 @@
  * @author     David Grudl (http://davidgrudl.com)
  */
 
-echo '
-Convertor for PHP 5.4 arrays
-----------------------------
-';
-
 $args = $_SERVER['argv'];
 $toOldSyntax = (isset($args[1]) && in_array($args[1], ['-r', '--reverse']));
+$convert = $toOldSyntax ? 'convertSquareBracketsToArrays' : 'convertArraysToSquareBrackets';
 
-if (!isset($args[1]) || ($toOldSyntax && !isset($args[2]))) {
-	die("Usage: {$args[0]} [-r|--reverse] <directory>\n");
-}
+if (isset($args[$tmp = $toOldSyntax ? 2 : 1])) {
+	$path = $args[$tmp];
 
-$dir = $toOldSyntax ? $args[2] : $args[1];
-if (!is_dir($dir)) {
-	echo "Directory $dir not found.\n";
-	die(1);
-}
-
-foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir)) as $file) {
-	if (!$file->isFile() || !in_array($file->getExtension(), ['php', 'phpt'], TRUE)) {
-		continue;
-	}
-	echo $file;
-	$orig = file_get_contents($file);
-	if (!$toOldSyntax) {
-		$res = convertArraysToSquareBrackets($orig);
+	if (is_file($path)) {
+		$iterator = array($path);
+	} elseif (is_dir($path)) {
+		$iterator = new CallbackFilterIterator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path)), function($file) {
+			return $file->isFile() && in_array($file->getExtension(), ['php', 'phpt', 'phtml'], TRUE);
+		});
 	} else {
-		$res = convertSquareBracketsToArrays($orig);
+		echo "Path $path not found.\n";
+		die(1);
 	}
-	if ($orig !== $res) {
-		echo " - converted";
-		file_put_contents($file, $res);
+
+	foreach ($iterator as $file) {
+		echo $file;
+		$orig = file_get_contents($file);
+		$res = $convert($orig);
+		if ($orig !== $res) {
+			echo " (changed)";
+			file_put_contents($file, $res);
+		}
+		echo "\n";
 	}
-	echo "\n";
+
+} elseif (defined('STDIN') && (fstat(STDIN)['size'])) {
+	$orig = file_get_contents('php://stdin');
+	echo $convert($orig);
+
+} else {
+	echo "
+Convertor for PHP 5.4 arrays
+----------------------------
+Usage: {$args[0]} [-r|--reverse] [<directory> | <file>] (or STDIN is used)
+";
+	die(1);
 }
 
 
