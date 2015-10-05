@@ -3,7 +3,7 @@
 /**
  * Converts between array() and [] used by PHP 5.4
  *
- * @author     David Grudl (http://davidgrudl.com)
+ * @author     David Grudl (https://davidgrudl.com)
  */
 
 $args = $_SERVER['argv'];
