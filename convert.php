@@ -17,7 +17,7 @@ if (isset($args[$tmp = $toOldSyntax ? 2 : 1])) {
 		$iterator = array($path);
 	} elseif (is_dir($path)) {
 		$iterator = new CallbackFilterIterator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path)), function($file) {
-			return $file->isFile() && in_array($file->getExtension(), ['php', 'phpt', 'phtml'], TRUE);
+			return $file->isFile() && in_array($file->getExtension(), ['php', 'phpt', 'phtml'], true);
 		});
 	} else {
 		echo "Path $path not found.\n";
@@ -63,7 +63,7 @@ function convertArraysToSquareBrackets($code)
 	for ($i = 0; $i < count($tokens); $i++) {
 		$token = $tokens[$i];
 		if ($token === '(') {
-			$brackets[] = FALSE;
+			$brackets[] = false;
 
 		} elseif ($token === ')') {
 			$token = array_pop($brackets) ? ']' : ')';
@@ -75,7 +75,7 @@ function convertArraysToSquareBrackets($code)
 			}
 			if (isset($tokens[$a]) && $tokens[$a] === '(') {
 				$i = $a;
-				$brackets[] = TRUE;
+				$brackets[] = true;
 				$token = '[';
 			}
 		}
@@ -94,7 +94,7 @@ function convertSquareBracketsToArrays($code)
 {
 	$out = '';
 	$brackets = [];
-	$ignoreBracket = FALSE;
+	$ignoreBracket = false;
 	foreach (token_get_all($code) as $token) {
 		if ($token === '[') {
 			$brackets[] = !$ignoreBracket;
